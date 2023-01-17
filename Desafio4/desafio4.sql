@@ -72,3 +72,81 @@ DELETE FROM top_spotify WHERE PERMANENCIA <= 3;
 
 SELECT * FROM ULTIMOS_LANZAMIENTOS;
 SELECT * FROM top_spotify;
+
+-- Ejercicio 2
+-- 1)
+/*
+Generar una consulta de actualización en 
+la que se modifique el nombre del autor de 
+apellido ECHEVERRÍA por Esteban. Tener 
+en cuenta que se debe modificar el nombre 
+de este autor y no su apellido.
+*/
+USE LIBRERIA;
+SET sql_safe_updates = 0;
+UPDATE autores SET nombre = "Esteban" WHERE apellido = "ECHEVERRIA";
+SELECT * FROM autores where apellido= "echeverria";
+
+-- 2)
+/*
+Agregar a la tabla EMPLEADOS una columna
+con el nombre PERMANENCIA. Completar 
+la columna con la antigüedad (expresada en 
+años) de cada empleado, tomando como base 
+la fecha de ingreso de cada uno de ellos
+*/
+ALTER TABLE empleados ADD COLUMN permanencia int;
+SELECT * FROM empleados;
+UPDATE empleados SET permanencia = TIMESTAMPDIFF(YEAR, fecha_ingreso, current_timestamp());
+SELECT * FROM empleados;
+
+-- 3)
+/*
+Agregar a la tabla LIBROS una columna con 
+el nombre PRECIO_PÚBLICO. A continuación, 
+completar la columna con el precio de venta 
+al público de cada libro agregándole un 21%
+en concepto de IVA a los precios originales. 
+Mantener un máximo de 2 decimales.
+*/
+ALTER TABLE libros ADD COLUMN precio_publico double;
+SELECT * FROM libros;
+UPDATE libros SET precio_publico = ROUND(precio * 1.21, 2);
+SELECT * FROM libros;
+
+-- Ejercicio 3
+
+-- 1)
+/*
+Generar una tabla nueva y nombrarla como 
+EMPLEADOS_ANTERIORES, a partir de la 
+tabla EMPLEADOS. Tomar todos los campos 
+de la tabla original. Luego, volcar en la tabla 
+nueva los empleados cuyos apellidos sean 
+THOMAS, PEREIRA y DEVO. Una vez 
+copiados estos 3 empleados en la tabla 
+nueva, eliminarlos de la tabla original
+(EMPLEADOS).
+*/
+CREATE TABLE empleados_anteriores
+SELECT * FROM empleados WHERE apellido IN ("THOMAS", "PEREIRA", "DEVO");
+
+SELECT * FROM empleados_anteriores;
+
+DELETE FROM empleados WHERE apellido IN ("THOMAS", "PEREIRA", "DEVO");
+SELECT * FROM empleados WHERE apellido IN ("THOMAS", "PEREIRA", "DEVO");
+
+-- 2)
+/*
+Copiar a la tabla EMPLEADOS_ANTERIORES
+al empleado de apellido CRUZ desde la tabla 
+EMPLEADOS. Una vez copiado a la tabla 
+nueva, eliminarlo de la original
+*/
+INSERT INTO empleados_anteriores
+SELECT * FROM empleados WHERE apellido = "CRUZ";
+
+SELECT * FROM empleados_anteriores;
+
+DELETE FROM empleados WHERE apellido = "CRUZ";
+SELECT * FROM empleados WHERE apellido = "CRUZ";
